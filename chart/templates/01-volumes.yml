@@ -1,0 +1,31 @@
+{{- $claims := ternary .Values.storage.production.claims .Values.storage.development.claims .Values.is_production }}
+{{- range $key, $claim := $claims }}
+{{- if eq $claim.className "nfs" }}
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ $claim.name }}-volume
+spec:
+  capacity:
+    storage: {{ $claim.size }}
+  volumeMode: Filesystem
+  accessModes:
+    - {{ default .Values.storage.defaultAccessMode $claim.accessMode }}
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: {{ $claim.className }}
+  {{- $mountOpts := default .Values.storage.nfsMountOptions $claim.mountOptions }}
+  {{- if $mountOpts }}
+  mountOptions:
+    {{- range $mountOpts }}
+    - {{ . }}
+    {{- end }}
+  {{- end }}
+  nfs:
+    server: {{ $claim.nfs.server }}
+    path: {{ $claim.nfs.path }}
+    readOnly: {{ $claim.nfs.readOnly }}
+
+{{- end }}
+{{- end }}

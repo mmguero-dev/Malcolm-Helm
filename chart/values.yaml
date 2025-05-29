@@ -192,58 +192,146 @@ storage:
   # This helm chart requires a storage provisioner class it defaults to local-path provisioner
   # If your kuberenetes cluster has a different storage provisioner please ensure you change this name.
   # https://github.com/rancher/local-path-provisioner
+  # The NFS options in each claim and the global nfsMountOptions only apply when className is nfs
   development:
-    pcap_claim:
-      # The size of the claim
-      size: 25Gi
-      # The kubernetes storage class name
-      className: local-path
-    zeek_claim:
-      size: 25Gi
-      className: local-path
-    suricata_claim:
-      size: 25Gi
-      className: local-path
-    config_claim:
-      size: 25Gi
-      className: local-path
-    runtime_logs_claim:
-      size: 25Gi
-      className: local-path
-    opensearch_claim:
-      size: 25Gi
-      className: local-path
-    opensearch_backup_claim:
-      size: 25Gi
-      className: local-path
-    postgres_claim:
-      size: 15Gi
-      className: local-path
+    claims:
+      pcap_claim:
+        name: pcap
+        size: 25Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/pcap
+          server: 10.0.2.100
+          readOnly: false
+      zeek_claim:
+        name: zeek
+        size: 25Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/zeek-logs
+          server: 10.0.2.100
+          readOnly: false
+      suricata_claim:
+        name: suricata
+        size: 25Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/suricata-logs
+          server: 10.0.2.100
+          readOnly: false
+      config_claim:
+        name: config
+        size: 25Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/config
+          server: 10.0.2.100
+          readOnly: false
+      runtime_logs_claim:
+        name: runtime-logs
+        size: 25Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/runtime-logs
+          server: 10.0.2.100
+          readOnly: false
+      opensearch_claim:
+        name: opensearch
+        size: 25Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/opensearch
+          server: 10.0.2.100
+          readOnly: false
+      opensearch_backup_claim:
+        name: opensearch-backup
+        size: 25Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/opensearch-backup
+          server: 10.0.2.100
+          readOnly: false
+      postgres_claim:
+        name: postgres
+        size: 15Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/postgres
+          server: 10.0.2.100
+          readOnly: false
   production:
-    pcap_claim:
-      size: 100Gi
-      className: local-path
-    zeek_claim:
-      size: 50Gi
-      className: local-path
-    suricata_claim:
-      size: 50Gi
-      className: local-path
-    config_claim:
-      size: 25Gi
-      className: local-path
-    runtime_logs_claim:
-      size: 25Gi
-      className: local-path
-    opensearch_claim:
-      size: 25Gi
-      className: local-path
-    opensearch_backup_claim:
-      size: 25Gi
-      className: local-path
-    postgres_claim:
-      size: 15Gi
-      className: local-path
+    claims:
+      pcap_claim:
+        name: pcap
+        size: 100Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/pcap
+          server: 10.0.2.100
+          readOnly: false
+      zeek_claim:
+        name: zeek
+        size: 50Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/zeek-logs
+          server: 10.0.2.100
+          readOnly: false
+      suricata_claim:
+        name: suricata
+        size: 50Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/suricata-logs
+          server: 10.0.2.100
+          readOnly: false
+      config_claim:
+        name: config
+        size: 25Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/config
+          server: 10.0.2.100
+          readOnly: false
+      runtime_logs_claim:
+        name: runtime-logs
+        size: 25Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/runtime-logs
+          server: 10.0.2.100
+          readOnly: false
+      opensearch_claim:
+        name: opensearch
+        size: 25Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/opensearch
+          server: 10.0.2.100
+          readOnly: false
+      opensearch_backup_claim:
+        name: opensearch-backup
+        size: 25Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/opensearch-backup
+          server: 10.0.2.100
+          readOnly: false
+      postgres_claim:
+        name: postgres
+        size: 15Gi
+        className: local-path
+        nfs:
+          path: /export/Malcolm/postgres
+          server: 10.0.2.100
+          readOnly: false
+  defaultAccessMode: ReadWriteMany
+  nfsMountOptions:
+    - nfsvers=4.1
+    - soft
+    - noac
+    - timeo=600
+    - retrans=2
 
 ingress:
   # Enable this to use the default nginx ingress controller

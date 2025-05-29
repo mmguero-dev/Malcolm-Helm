@@ -263,7 +263,7 @@ spec:
             claimName: zeek-claim
         - name: filebeat-suricata-offline-volume
           persistentVolumeClaim:
-            claimName: suricata-claim-offline
+            claimName: suricata-claim
         - name: filebeat-nginx-runtime-logs-volume
           persistentVolumeClaim:
             claimName: runtime-logs-claim
