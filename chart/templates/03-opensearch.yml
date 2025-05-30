@@ -1,6 +1,10 @@
 {{- $dirinit_image := .Values.image.dirinit_container_override | default (printf "%s/dirinit:%s" .Values.image.repository .Chart.AppVersion) }}
 {{- $opensearch_image := .Values.image.opensearch_container_override | default (printf "%s/opensearch:%s" .Values.image.repository .Chart.AppVersion) }}
 {{- if .Values.opensearch.enabled }}
+
+{{- $os_claim := ternary .Values.storage.production.claims.opensearch_claim .Values.storage.development.claims.opensearch_claim .Values.is_production }}
+{{- $backup_claim := ternary .Values.storage.production.claims.opensearch_backup_claim .Values.storage.development.claims.opensearch_backup_claim .Values.is_production }}
+
 ---
 apiVersion: v1
 kind: Service
@@ -56,53 +60,32 @@ spec:
   replicas: {{ .Values.opensearch.replicas }}
 {{- end }}
   volumeClaimTemplates:
-{{- if .Values.is_production }}
-  {{- with .Values.storage.production }}
     - metadata:
-        name: opensearch-claim
+        name: {{ $os_claim.name }}-claim
       spec:
-        storageClassName: {{ .opensearch_claim.className }}
+        storageClassName: {{ $os_claim.className }}
         accessModes:
-          - ReadWriteOnce
+          - {{ default "ReadWriteOnce" $os_claim.accessMode }}
         volumeMode: Filesystem
         resources:
           requests:
-            storage: {{ .opensearch_claim.size }}
+            storage: {{ $os_claim.size }}
+        {{- if eq $os_claim.className "nfs" }}
+        volumeName: {{ $os_claim.name }}-volume
+        {{- end }}
     - metadata:
-        name: opensearch-backup-claim
+        name: {{ $backup_claim.name }}-claim
       spec:
-        storageClassName: {{ .opensearch_backup_claim.className }}
+        storageClassName: {{ $backup_claim.className }}
         accessModes:
-          - ReadWriteOnce
+          - {{ default "ReadWriteOnce" $backup_claim.accessMode }}
         volumeMode: Filesystem
         resources:
           requests:
-            storage: {{ .opensearch_backup_claim.size }}
-  {{- end }}
-{{- else }}
-  {{- with .Values.storage.development }}
-    - metadata:
-        name: opensearch-claim
-      spec:
-        storageClassName: {{ .opensearch_claim.className }}
-        accessModes:
-          - ReadWriteOnce
-        volumeMode: Filesystem
-        resources:
-          requests:
-            storage: {{ .opensearch_claim.size }}
-    - metadata:
-        name: opensearch-backup-claim
-      spec:
-        storageClassName: {{ .opensearch_backup_claim.className }}
-        accessModes:
-          - ReadWriteOnce
-        volumeMode: Filesystem
-        resources:
-          requests:
-            storage: {{ .opensearch_backup_claim.size }}
-  {{- end }}
-{{- end }}
+            storage: {{ $backup_claim.size }}
+        {{- if eq $backup_claim.className "nfs" }}
+        volumeName: {{ $backup_claim.name }}-volume
+        {{- end }}
   template:
     metadata:
       labels:
@@ -142,12 +125,12 @@ spec:
           - mountPath: /var/local/curlrc/secretmap
             name: opensearch-opensearch-curlrc-secret-volume
           - mountPath: "/usr/share/opensearch/data"
-            name: opensearch-claim
+            name: {{ $os_claim.name }}-claim
           - mountPath: "/opt/opensearch/backup"
-            name: opensearch-backup-claim
+            name: {{ $backup_claim.name }}-claim
           - name: opensearch-keystore-default-secret-volume
             mountPath: /usr/share/opensearch/config/bootstrap/secretmap
-          - name: opensearch-claim
+          - name: {{ $os_claim.name }}-claim
             mountPath: /usr/share/opensearch/config/persist
             subPath: "opensearch"
       initContainers:
@@ -166,9 +149,9 @@ spec:
           - name: PUSER_MKDIR
             value: "/data/config:opensearch;/data/opensearch:nodes"
         volumeMounts:
-          - name: opensearch-claim
+          - name: {{ $os_claim.name }}-claim
             mountPath: "/data/opensearch"
-          - name: opensearch-claim
+          - name: {{ $os_claim.name }}-claim
             mountPath: "/data/config"
       volumes:
         - name: opensearch-var-local-catrust-volume
