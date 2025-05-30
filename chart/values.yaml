@@ -239,6 +239,7 @@ storage:
         name: opensearch
         size: 25Gi
         className: local-path
+        accessMode: ReadWriteOnce
         nfs:
           path: /export/Malcolm/opensearch
           server: 10.0.2.100
@@ -247,6 +248,7 @@ storage:
         name: opensearch-backup
         size: 25Gi
         className: local-path
+        accessMode: ReadWriteOnce
         nfs:
           path: /export/Malcolm/opensearch-backup
           server: 10.0.2.100
@@ -255,6 +257,7 @@ storage:
         name: postgres
         size: 15Gi
         className: local-path
+        accessMode: ReadWriteOnce
         nfs:
           path: /export/Malcolm/postgres
           server: 10.0.2.100
@@ -305,6 +308,7 @@ storage:
         name: opensearch
         size: 25Gi
         className: local-path
+        accessMode: ReadWriteOnce
         nfs:
           path: /export/Malcolm/opensearch
           server: 10.0.2.100
@@ -313,6 +317,7 @@ storage:
         name: opensearch-backup
         size: 25Gi
         className: local-path
+        accessMode: ReadWriteOnce
         nfs:
           path: /export/Malcolm/opensearch-backup
           server: 10.0.2.100
@@ -321,6 +326,7 @@ storage:
         name: postgres
         size: 15Gi
         className: local-path
+        accessMode: ReadWriteOnce
         nfs:
           path: /export/Malcolm/postgres
           server: 10.0.2.100
