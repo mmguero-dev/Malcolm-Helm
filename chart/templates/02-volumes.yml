@@ -1,4 +1,5 @@
 {{- $claims := ternary .Values.storage.production.claims .Values.storage.development.claims .Values.is_production }}
+
 {{- range $key, $claim := $claims }}
 {{- if eq $claim.className "nfs" }}
 
@@ -28,4 +29,22 @@ spec:
     readOnly: {{ $claim.nfs.readOnly }}
 
 {{- end }}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $claim.name }}-claim
+spec:
+  storageClassName: {{ $claim.className }}
+  accessModes:
+    - {{ default .Values.storage.defaultAccessMode $claim.accessMode }}
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: {{ $claim.size }}
+  {{- if eq $claim.className "nfs" }}
+  volumeName: {{ $claim.name }}-volume
+  {{- end }}
+
 {{- end }}
