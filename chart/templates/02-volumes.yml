@@ -13,7 +13,7 @@ spec:
     storage: {{ $claim.size }}
   volumeMode: Filesystem
   accessModes:
-    - {{ default .Values.storage.defaultAccessMode $claim.accessMode }}
+    - {{ $claim.accessMode }}
   persistentVolumeReclaimPolicy: Retain
   storageClassName: {{ $claim.className }}
   {{- $mountOpts := default .Values.storage.nfsMountOptions $claim.mountOptions }}
@@ -38,7 +38,7 @@ metadata:
 spec:
   storageClassName: {{ $claim.className }}
   accessModes:
-    - {{ default .Values.storage.defaultAccessMode $claim.accessMode }}
+    - {{ $claim.accessMode }}
   volumeMode: Filesystem
   resources:
     requests:

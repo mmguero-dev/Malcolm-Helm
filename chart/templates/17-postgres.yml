@@ -47,7 +47,7 @@ spec:
       spec:
         storageClassName: {{ $claim.className }}
         accessModes:
-          - {{ default "ReadWriteOnce" $claim.accessMode }}
+          - {{ $claim.accessMode }}
         volumeMode: Filesystem
         resources:
           requests:

@@ -65,7 +65,7 @@ spec:
       spec:
         storageClassName: {{ $os_claim.className }}
         accessModes:
-          - {{ default "ReadWriteOnce" $os_claim.accessMode }}
+          - {{ $os_claim.accessMode }}
         volumeMode: Filesystem
         resources:
           requests:
@@ -78,7 +78,7 @@ spec:
       spec:
         storageClassName: {{ $backup_claim.className }}
         accessModes:
-          - {{ default "ReadWriteOnce" $backup_claim.accessMode }}
+          - {{ $backup_claim.accessMode }}
         volumeMode: Filesystem
         resources:
           requests:

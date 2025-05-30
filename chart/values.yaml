@@ -199,6 +199,7 @@ storage:
         name: pcap
         size: 25Gi
         className: local-path
+        accessMode: ReadWriteMany
         nfs:
           path: /export/Malcolm/pcap
           server: 10.0.2.100
@@ -207,6 +208,7 @@ storage:
         name: zeek
         size: 25Gi
         className: local-path
+        accessMode: ReadWriteMany
         nfs:
           path: /export/Malcolm/zeek-logs
           server: 10.0.2.100
@@ -215,6 +217,7 @@ storage:
         name: suricata
         size: 25Gi
         className: local-path
+        accessMode: ReadWriteMany
         nfs:
           path: /export/Malcolm/suricata-logs
           server: 10.0.2.100
@@ -223,6 +226,7 @@ storage:
         name: config
         size: 25Gi
         className: local-path
+        accessMode: ReadWriteMany
         nfs:
           path: /export/Malcolm/config
           server: 10.0.2.100
@@ -231,6 +235,7 @@ storage:
         name: runtime-logs
         size: 25Gi
         className: local-path
+        accessMode: ReadWriteMany
         nfs:
           path: /export/Malcolm/runtime-logs
           server: 10.0.2.100
@@ -268,6 +273,7 @@ storage:
         name: pcap
         size: 100Gi
         className: local-path
+        accessMode: ReadWriteMany
         nfs:
           path: /export/Malcolm/pcap
           server: 10.0.2.100
@@ -276,6 +282,7 @@ storage:
         name: zeek
         size: 50Gi
         className: local-path
+        accessMode: ReadWriteMany
         nfs:
           path: /export/Malcolm/zeek-logs
           server: 10.0.2.100
@@ -284,6 +291,7 @@ storage:
         name: suricata
         size: 50Gi
         className: local-path
+        accessMode: ReadWriteMany
         nfs:
           path: /export/Malcolm/suricata-logs
           server: 10.0.2.100
@@ -292,6 +300,7 @@ storage:
         name: config
         size: 25Gi
         className: local-path
+        accessMode: ReadWriteMany
         nfs:
           path: /export/Malcolm/config
           server: 10.0.2.100
@@ -300,6 +309,7 @@ storage:
         name: runtime-logs
         size: 25Gi
         className: local-path
+        accessMode: ReadWriteMany
         nfs:
           path: /export/Malcolm/runtime-logs
           server: 10.0.2.100
@@ -331,7 +341,6 @@ storage:
           path: /export/Malcolm/postgres
           server: 10.0.2.100
           readOnly: false
-  defaultAccessMode: ReadWriteMany
   nfsMountOptions:
     - nfsvers=4.1
     - soft
