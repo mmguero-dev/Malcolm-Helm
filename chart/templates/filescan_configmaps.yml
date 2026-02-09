@@ -84,7 +84,7 @@ data:
       distribution: 1200
       scanner: 180
     coordinator:
-      addr: 'strelka-coordinator:6379'
+      addr: 'strelka-coordinator:6380'
       db: 0
       password: null
     tasting:
@@ -958,13 +958,13 @@ data:
   frontend.yaml: |
     server: ":57314"
     coordinator:
-      addr: 'strelka-coordinator:6379'
+      addr: 'strelka-coordinator:6380'
       db: 0
       password: null
       pool: 100
       read: 10s
     gatekeeper:
-      addr: 'strelka-gatekeeper:6379'
+      addr: 'strelka-gatekeeper:6380'
       db: 0
       password: null
       pool: 100
@@ -995,7 +995,7 @@ apiVersion: v1
 data:
   manager.yaml: |
     coordinator:
-      addr: 'strelka-coordinator:6379'
+      addr: 'strelka-coordinator:6380'
       db: 0
       password: null
       pool: 100

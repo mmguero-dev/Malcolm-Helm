@@ -5,7 +5,7 @@ metadata:
   name: redis-cache
 spec:
   ports:
-    - port: 6379
+    - port: 6380
       protocol: TCP
       name: redis
   selector:
@@ -32,7 +32,7 @@ spec:
           "name" "redis-cache-container"
           "mode" "cache"
           "secretName" "redis-env"
-          "port" 6379
+          "port" 6380
           "portName" "redis"
         ) | nindent 6 }}
       volumes:

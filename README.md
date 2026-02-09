@@ -250,14 +250,28 @@ The [nfs-subdir-exeternal-provisioner](https://github.com/kubernetes-sigs/nfs-su
 
 These steps require the NFS server's IP address or DNS host name as well as the NFS exported path from [above](#NFSServer). In the following example the server's DNS name is `nfsserver.example.org` and the exported path on that server is `/exports/malcolm/nfs-subdir-provisioner`. Note that although the NFS server's export path is actually `/exports`, the nfs-subdir-external-provisioner can point to a sub-directory within the exported path (e.g., `/exports/malcolm/nfs-subdir-provisioner`) to keep the files created by Malcolm contained to that directory.
 
-Add the Helm repo, then install the provisioner with the server name and exported path as parameters:
+Add the Helm repo, then install the provisioner, minimally with the `nfs.server` and `nfs.path` parameters. Other user-configurable options are also noted here by superscript (ᵃ, ᵇ, etc.). See the key beneath the example.
  
 ```bash
-$ helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
-$ helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
-    --set nfs.server=nfsserver.example.org \
-    --set nfs.path=/exports/malcolm/nfs-subdir-provisioner 
+$ helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner
+$ helm install nfs-subdir-external-provisionerᵃ nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
+    -n defaultᵇ \
+    --set nfs.server=nfsserver.example.orgᶜ \
+    --set nfs.path=/exports/malcolm/nfs-subdir-provisionerᵈ \
+    --set storageClass.name=nfs-clientᵉ \
+    --set storageClass.provisionerName=cluster.local/nfs-subdir-external-provisionerᶠ \
+    --set fullnameOverride=nfs-subdir-external-provisionerᵍ
 ```
+
+**Key:**
+
+* a - **Release name** (must be unique within the namespace)
+* b - **Namespace** into which the provisioner will be installed
+* c - **NFS server** hostname/IP hosting the export (**required**)
+* d - **NFS export path** on the server (base directory under which subdirectories/PVs will be created) (**required**)
+* e - **StorageClass name** that will be created ([to be specified as](#NFSMalcolmConfig) `storage_class_name` in `values.yaml`)
+* f - **Provisioner name/ID** for this instance (must be unique cluster-wide if you run multiple provisioners)
+* g - **fullnameOverride** for Kubernetes object naming (useful to avoid name collisions / make resources easier to identify)
 
 Ensure the storage class was successfully deployed:
 
