@@ -15,7 +15,7 @@ type: application
 
 # This is the chart version. It should *almost* match appVersion, although "converted"
 # to semver (e.g., appVersion 25.09.0 -> version 25.9.0)
-version: 26.01.0
+version: 26.1.0
 
 # This is the version number of the application being deployed. The application
 # version tracks the Malcolm release number (https://github.com/idaholab/Malcolm/releases),
