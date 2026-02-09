@@ -5,7 +5,7 @@ metadata:
   name: redis
 spec:
   ports:
-    - port: 6379
+    - port: {{ .Values.redis_env.ports.local.persistent }}
       protocol: TCP
       name: redis
   selector:
@@ -31,7 +31,7 @@ spec:
         "name" "redis-container"
         "mode" "main"
         "secretName" "redis-env"
-        "port" 6379
+        "port" .Values.redis_env.ports.local.persistent
         "portName" "redis"
         "extraVolumeMounts" (list
           (dict "mountPath" "/data" "name" "redis-volume" "subPath" "redis")

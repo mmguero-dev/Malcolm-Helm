@@ -59,7 +59,7 @@ Params:
 {{- define "malcolm.redis.container" -}}
 {{- $root := .root -}}
 {{- $name := .name -}}
-{{- $port := (.port | default 6379) -}}
+{{- $port := (.port | default $root.Values.redis_env.ports.local.persistent) -}}
 {{- $portName := (.portName | default "redis") -}}
 {{- $secret := (.secretName | default "redis-env") -}}
 {{- $mode := (.mode | default "cache") -}}

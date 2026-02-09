@@ -5,7 +5,7 @@ metadata:
   name: redis-cache
 spec:
   ports:
-    - port: 6380
+    - port: {{ .Values.redis_env.ports.local.cache }}
       protocol: TCP
       name: redis
   selector:
@@ -32,8 +32,8 @@ spec:
           "name" "redis-cache-container"
           "mode" "cache"
           "secretName" "redis-env"
-          "port" 6380
-          "portName" "redis"
+          "port" .Values.redis_env.ports.local.cache
+          "portName" "redis-cache"
         ) | nindent 6 }}
       volumes:
         - name: var-local-catrust-volume

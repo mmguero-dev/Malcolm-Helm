@@ -581,6 +581,13 @@ filescan_env:
     backend_procs: 4
 
 redis_env:
+  ports:
+    local:
+      persistent: 6379
+      cache: 6380
+    remote:
+      persistent: 6381
+      cache: 6382
   # TODO: I have no idea what to base the max_memory/cache_max_memory numbers on, so for
   # now I'm setting them to "0" which is the same as the redis default, which means
   # "don't evict based on memory."
