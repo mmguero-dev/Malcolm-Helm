@@ -1444,7 +1444,7 @@ data:
 
     rule base64_pe {
         meta:
-        description = "Detects base64 encoded executable"
+    		description = "Detects base64 encoded executable"
         strings:
             $s1 = "TVpTAQEAAAAEAAAA//8AALgAAAA" wide ascii
             $s2 = "TVoAAAAAAAAAAAAAAAAAAAAAAAA" wide ascii
@@ -1835,15 +1835,15 @@ data:
 
     rule docx_file
     {
-      meta:
-          author = "Niels Warnars"
-          type = "document"
-        description = "Word 2007 file format detection"
-      strings:
-        $header = { 50 4B 03 04 }
-        $str = "document.xml"
-      condition:
-         $header at 0 and $str
+    	meta:
+    	    author = "Niels Warnars"
+    	    type = "document"
+    		description = "Word 2007 file format detection"
+    	strings:
+    		$header = { 50 4B 03 04 }
+    		$str = "document.xml"
+    	condition:
+    	   $header at 0 and $str
     }
 
     rule hta_file {
@@ -2015,6 +2015,7 @@ data:
     //         magic.mime_type() == "text/xml" and
     //         all of them
     // }
+
   tlsh.yaml: |
     TestMatchA:
       - T1158165343EAA43024BF4217FD7D5C9BFE288F41027CAA399D8B5FD56945E518D323294
