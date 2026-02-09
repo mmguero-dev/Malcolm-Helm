@@ -431,26 +431,32 @@ The Malcolm-Helm pods should all be `Running` after a few minutes:
 
 ```bash
 $ kubectl get pods -n malcolm
-NAME                                           READY   STATUS    RESTARTS   AGE
-api-deployment-8685768bbd-8kr8x                1/1     Running   0          103s
-arkime-deployment-7dbf5f99c5-nrgxm             1/1     Running   0          103s
-dashboards-deployment-5897d7cfcf-nh9r6         1/1     Running   0          103s
-dashboards-helper-deployment-758645fdc-vggnq   1/1     Running   0          101s
-file-monitor-deployment-64c595db-2xwlp         1/1     Running   0          103s
-filebeat-offline-deployment-596bb57f5b-4hl89   1/1     Running   0          103s
-freq-deployment-bb49df764-frhqt                1/1     Running   0          103s
-htadmin-deployment-7658bf6ff5-bwqqg            1/1     Running   0          101s
-logstash-deployment-569899b584-758nw           1/1     Running   0          102s
-netbox-deployment-654cb5598c-c58n8             1/1     Running   0          103s
-nginx-proxy-deployment-5db4b75948-8ltpx        1/1     Running   0          103s
-opensearch-0                                   1/1     Running   0          103s
-pcap-monitor-deployment-84986f9ccc-wd45z       1/1     Running   0          103s
-postgres-statefulset-0                         1/1     Running   0          103s
-redis-cache-deployment-644f9947f4-6dwqk        1/1     Running   0          103s
-redis-deployment-677476f956-782n4              1/1     Running   0          102s
-suricata-offline-deployment-678fcdc985-mmj67   1/1     Running   0          103s
-upload-deployment-6b458f89c7-k8hd8             1/1     Running   0          103s
-zeek-offline-deployment-57c548c646-d86lw       1/1     Running   0          102s
+NAME                                           READY   STATUS    RESTARTS AGE
+api-deployment-ccd48474-9gnwl                  1/1     Running   0        46s
+arkime-deployment-7f5dc4fcd8-t24vn             1/1     Running   0        47s
+dashboards-deployment-6f9c4c6d7d-t9lpn         1/1     Running   0        45s
+dashboards-helper-deployment-7bc86896c-nxbvp   1/1     Running   0        47s
+filebeat-offline-deployment-68b9d6dd5f-ghjm8   1/1     Running   0        46s
+filescan-deployment-8cf9c7595-kh8xw            1/1     Running   0        47s
+freq-deployment-7d8dd4d88b-jdkkv               1/1     Running   0        47s
+htadmin-deployment-55d89f4967-f46l7            1/1     Running   0        47s
+logstash-deployment-6479dbd4c9-bmvrq           1/1     Running   0        45s
+logstash-deployment-6479dbd4c9-pq5wg           1/1     Running   0        46s
+logstash-deployment-6479dbd4c9-px56c           1/1     Running   0        45s
+logstash-deployment-6479dbd4c9-vccc7           1/1     Running   0        45s
+netbox-deployment-58d7b6bf9f-dtpd6             1/1     Running   0        47s
+nginx-proxy-deployment-77c9cfc9cc-7wjt4        1/1     Running   0        47s
+opensearch-0                                   1/1     Running   0        47s
+pcap-monitor-deployment-5ddffb999f-g5wsx       1/1     Running   0        47s
+postgres-statefulset-0                         1/1     Running   0        47s
+redis-cache-deployment-86b95b5c75-hnn9b        1/1     Running   0        47s
+redis-deployment-659ffb44b6-krtv9              1/1     Running   0        47s
+strelka-backend-deployment-588b8d6bd9-bgplg    1/1     Running   0        47s
+strelka-frontend-deployment-7fddf7989c-sdsr7   1/1     Running   0        45s
+strelka-manager-deployment-6bb9d67d97-lpd4q    1/1     Running   0        46s
+suricata-offline-deployment-85654c77df-9ps6x   1/1     Running   0        45s
+upload-deployment-795dd4998f-qdvl8             1/1     Running   0        45s
+zeek-offline-deployment-5c76b6f9bd-v98bt       1/1     Running   0        46s
 ```
 
 The PersistentVolumeClaims should be bound:

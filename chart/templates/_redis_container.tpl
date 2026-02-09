@@ -79,9 +79,9 @@ Params:
     - "sh"
     - "-c"
     - {{ if eq $mode "main" -}}
-      "redis-server {{ include "malcolm.redis.args.main" (dict "root" $root) | trim }}"
+      "redis-server --port {{ $port }} {{ include "malcolm.redis.args.main" (dict "root" $root) | trim }}"
       {{- else -}}
-      "redis-server {{ include "malcolm.redis.args.cache" (dict "root" $root) | trim }}"
+      "redis-server --port {{ $port }} {{ include "malcolm.redis.args.cache" (dict "root" $root) | trim }}"
       {{- end }}
   ports:
     - name: {{ $portName }}
