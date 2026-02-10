@@ -225,7 +225,7 @@ spec:
              (dict "mountPath" "/var/local/curlrc/secretmap" "name" "filebeat-opensearch-curlrc-secret-volume")
              (dict "mountPath" "/suricata" "name" "suricata-live-logs-volume")
              (dict "mountPath" "/zeek" "name" "zeek-live-logs-volume")
-             (dict "mountPath" "/filescan" "name" "filescan-live-logs-volume" "subPath" "filescan")
+             (dict "mountPath" "/filescan" "name" "filescan-live-logs-volume")
            )
          ) | nindent 6 }}
       initContainers:
@@ -237,7 +237,7 @@ spec:
            "name" "zeek-remotesensor-dirinit-container"
            "env" (list
              (dict "name" "PUSER_CHOWN" "value" "/config;/filescan;/redis;/suricata-live-logs;/zeek-live-logs;/zeek-files")
-             (dict "name" "PUSER_MKDIR" "value" "/suricata-live-logs:live;/config:zeek/intel/Mandiant,zeek/intel/MISP,zeek/intel/STIX;/zeek-live-logs:current,live/logs,extract_files/filescan,processed,upload;/zeek-files:extract_files/filescan;/filescan:filescan;/redis:data")
+             (dict "name" "PUSER_MKDIR" "value" "/suricata-live-logs:live;/config:zeek/intel/Mandiant,zeek/intel/MISP,zeek/intel/STIX;/zeek-live-logs:current,live/logs,extract_files/filescan,processed,upload;/zeek-files:extract_files/filescan;/redis:data")
            )
            "volumeMounts" (list
              (dict "name" "filescan-live-logs-volume" "mountPath" "/filescan")

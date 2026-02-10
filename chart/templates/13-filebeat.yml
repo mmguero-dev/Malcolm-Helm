@@ -50,7 +50,7 @@ spec:
              (dict "mountPath" "/var/local/curlrc/secretmap" "name" "filebeat-opensearch-curlrc-secret-volume")
              (dict "mountPath" "/suricata" "name" "suricata-live-logs-volume")
              (dict "mountPath" "/zeek" "name" "zeek-live-logs-volume")
-             (dict "mountPath" "/filescan" "name" "filescan-logs-volume" "subPath" "logs")
+             (dict "mountPath" "/filescan" "name" "filescan-logs-volume")
            )
          ) | nindent 6 }}
       initContainers:
@@ -59,7 +59,7 @@ spec:
            "name" "filebeat-dirinit-container"
            "env" (list
              (dict "name" "PUSER_CHOWN" "value" "/filescan;/suricata;/zeek")
-             (dict "name" "PUSER_MKDIR" "value" "/filescan:logs;/suricata:live;/zeek:live")
+             (dict "name" "PUSER_MKDIR" "value" "/suricata:live;/zeek:live")
            )
            "volumeMounts" (list
              (dict "name" "filescan-logs-volume" "mountPath" "/filescan")
