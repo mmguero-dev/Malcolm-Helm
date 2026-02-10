@@ -455,7 +455,7 @@ suricata_env:
 # If disabled, PCAPs can still be uploaded using the Malcolm offline upload functionality.
 suricata_live:
   suricata_stats_enabled: true
-  suricata_log_path: /opt/suricata/logs
+  hostpath: /var/lib/malcolm/suricata-logs
 
   # Suricata live runs as a DaemonSet but schedules only on Kubernetes nodes with the following label
   nodeSelector:
@@ -508,10 +508,9 @@ suricata_offline:
 # If disabled, PCAPs can still be uploaded using the Malcolm offline upload functionality.
 zeek_live:
   zeek_disable_stats: ""
-  zeek_log_path: /usr/local/zeek/logs
-  zeek_extracted_path: /usr/local/zeek/extracted
-  filescan_log_path: /filescan
-  redis_persistence_path: /redis
+  hostpath:
+    logs: /var/lib/malcolm/zeek-logs
+    extracted: /var/lib/malcolm/extracted-files
 
   # Zeek live runs as a DaemonSet but schedules only on Kubernetes nodes with the following label
   nodeSelector:
@@ -561,6 +560,7 @@ zeek_offline:
 filescan_env:
   disable: false
   verbosity: ""
+  hostpath: /var/lib/malcolm/filescan-logs
   extracted_file_http_server_enable: true
   extracted_file_http_server_recursive: true
   extracted_file_http_server_magic: false
@@ -582,6 +582,7 @@ filescan_env:
     backend_procs: 4
 
 redis_env:
+  hostpath: /var/lib/malcolm/redis-aof
   ports:
     local:
       persistent: 6379
@@ -687,7 +688,7 @@ arkime_env:
 
 arkime_live:
   enabled: true
-  pcap_hostpath: "/zpool/nta-pcap"
+  hostpath: /var/lib/malcolm/arkime-pcap
   development:
     arkime_compression_type: none
     arkime_compression_level: "0"

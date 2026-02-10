@@ -101,17 +101,15 @@ spec:
            "root" $
            "name" "pcap-processor-dirinit-container"
            "env" (list
-             (dict "name" "PUSER_CHOWN" "value" "/data/pcap;/zeek;/data/config")
-             (dict "name" "PUSER_MKDIR" "value" "/data/pcap:processed,upload;/data/config:zeek/intel/Mandiant,zeek/intel/MISP,zeek/intel/STIX;/zeek:current,live,processed,upload,extract_files/filescan")
+             (dict "name" "PUSER_CHOWN" "value" "/pcap;/suricata;/zeek;/config")
+             (dict "name" "PUSER_MKDIR" "value" "/pcap:processed,upload;/config:zeek/intel/Mandiant,zeek/intel/MISP,zeek/intel/STIX;/suricata:live,/zeek:current,live,processed,upload;/extract_files:filescan")
            )
            "volumeMounts" (list
-             (dict "name" "pcap-volume" "mountPath" "/data/pcap")
-             (dict "name" "zeek-intel-volume" "mountPath" "/data/config")
-             (dict "name" "zeek-volume" "mountPath" "/zeek/current" "subPath" "current")
-             (dict "name" "zeek-volume" "mountPath" "/zeek/live" "subPath" "live")
-             (dict "name" "zeek-volume" "mountPath" "/zeek/processed" "subPath" "processed")
-             (dict "name" "zeek-volume" "mountPath" "/zeek/upload" "subPath" "upload")
-             (dict "name" "extract-zeek-volume" "mountPath" "/zeek/extract_files" "subPath" "extract_files")
+             (dict "name" "pcap-volume" "mountPath" "/pcap")
+             (dict "name" "suricata-logs-volume" "mountPath" "/suricata" )
+             (dict "name" "zeek-intel-volume" "mountPath" "/config")
+             (dict "name" "zeek-volume" "mountPath" "/zeek")
+             (dict "name" "extract-zeek-volume" "mountPath" "/extract_files" "subPath" "extract_files")
            )
          ) | nindent 6 }}
       {{- if ne (len .Values.zeek_chart_overrides.extra_init_containers) 0 }}
@@ -123,12 +121,12 @@ spec:
           name: {{ .Values.ca_trust_configmap_name | default "var-local-catrust" }}
       - name: pcap-volume
         hostPath:
-          path: "{{ .Values.arkime_live.pcap_hostpath }}"
+          path: "{{ .Values.arkime_live.hostpath }}"
           type: DirectoryOrCreate
       # Zeek volumes
       - name: zeek-volume
         hostPath:
-          path: "{{ .Values.zeek_live.zeek_log_path }}"
+          path: "{{ .Values.zeek_live.hostpath.logs }}"
           type: DirectoryOrCreate
       - name: zeek-offline-intel-preseed-volume
         configMap:
@@ -149,7 +147,7 @@ spec:
       # Suricata volumes
       - name: suricata-logs-volume
         hostPath:
-          path: "{{ .Values.suricata_live.suricata_log_path }}"
+          path: "{{ .Values.suricata_live.hostpath }}"
           type: DirectoryOrCreate
       {{- if ne (len .Values.suricata_chart_overrides.volumes) 0 }}
       {{- toYaml .Values.suricata_chart_overrides.volumes | nindent 6 }}

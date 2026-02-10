@@ -48,9 +48,9 @@ spec:
            "volumeMounts" (list
              (dict "mountPath" "/var/local/ca-trust/configmap" "name" "var-local-catrust-volume")
              (dict "mountPath" "/var/local/curlrc/secretmap" "name" "filebeat-opensearch-curlrc-secret-volume")
-             (dict "mountPath" "/suricata" "name" "filebeat-suricata-live-volume")
+             (dict "mountPath" "/suricata" "name" "suricata-live-logs-volume")
              (dict "mountPath" "/zeek" "name" "zeek-live-logs-volume")
-             (dict "mountPath" "/filescan" "name" "filescan-live-logs-volume")
+             (dict "mountPath" "/filescan" "name" "filescan-logs-volume" "subPath" "logs")
            )
          ) | nindent 6 }}
       initContainers:
@@ -58,11 +58,13 @@ spec:
            "root" $
            "name" "filebeat-dirinit-container"
            "env" (list
-             (dict "name" "PUSER_CHOWN" "value" "/zeek;/filescan")
+             (dict "name" "PUSER_CHOWN" "value" "/filescan;/suricata;/zeek")
+             (dict "name" "PUSER_MKDIR" "value" "/filescan:logs;/suricata:live;/zeek:live")
            )
            "volumeMounts" (list
+             (dict "name" "filescan-logs-volume" "mountPath" "/filescan")
+             (dict "name" "suricata-live-logs-volume" "mountPath" "/suricata")
              (dict "name" "zeek-live-logs-volume" "mountPath" "/zeek")
-             (dict "name" "filescan-live-logs-volume" "mountPath" "/filescan")
            )
          ) | nindent 6 }}
       volumes:
@@ -72,17 +74,17 @@ spec:
         - name: filebeat-opensearch-curlrc-secret-volume
           secret:
             secretName: opensearch-curlrc
-        - name: filebeat-suricata-live-volume
+        - name: filescan-logs-volume
           hostPath:
-            path: "{{ .Values.suricata_live.suricata_log_path }}"
+            path: "{{ .Values.filescan_env.hostpath }}"
+            type: DirectoryOrCreate
+        - name: suricata-live-logs-volume
+          hostPath:
+            path: "{{ .Values.suricata_live.hostpath }}"
             type: DirectoryOrCreate
         - name: zeek-live-logs-volume
           hostPath:
-            path: "{{ .Values.zeek_live.zeek_log_path }}"
-            type: DirectoryOrCreate
-        - name: filescan-live-logs-volume
-          hostPath:
-            path: "{{ .Values.zeek_live.filescan_log_path }}"
+            path: "{{ .Values.zeek_live.hostpath.logs }}"
             type: DirectoryOrCreate
 
 ---

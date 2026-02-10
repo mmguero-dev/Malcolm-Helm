@@ -87,7 +87,7 @@ spec:
            )
            "baseVolumeMounts" (list
              (dict "mountPath" "/var/local/ca-trust/configmap" "name" "var-local-catrust-volume")
-             (dict "mountPath" "/var/log/suricata" "name" "suricata-live-suricata-logs-volume")
+             (dict "mountPath" "/var/log/suricata" "name" "suricata-live-logs-volume")
            )
          ) | nindent 6 }}
       {{- if ne (len .Values.suricata_chart_overrides.sideCars) 0 }}
@@ -98,19 +98,20 @@ spec:
            "root" $
            "name" "suricata-live-dirinit-container"
            "env" (list
-             (dict "name" "PUSER_MKDIR" "value" "/data/suricata-logs:live")
+             (dict "name" "PUSER_CHOWN" "value" "/suricata")
+             (dict "name" "PUSER_MKDIR" "value" "/suricata:live")
            )
            "volumeMounts" (list
-             (dict "name" "suricata-live-suricata-logs-volume" "mountPath" "/data/suricata-logs")
+             (dict "name" "suricata-live-logs-volume" "mountPath" "/suricata")
            )
          ) | nindent 6 }}
       volumes:
         - name: var-local-catrust-volume
           configMap:
             name: {{ .Values.ca_trust_configmap_name | default "var-local-catrust" }}
-        - name: suricata-live-suricata-logs-volume
+        - name: suricata-live-logs-volume
           hostPath:
-            path: "{{ .Values.suricata_live.suricata_log_path }}"
+            path: "{{ .Values.suricata_live.hostpath }}"
             type: DirectoryOrCreate
         {{- if ne (len .Values.suricata_chart_overrides.live_volumes) 0 }}
         {{- toYaml .Values.suricata_chart_overrides.live_volumes | nindent 8 }}

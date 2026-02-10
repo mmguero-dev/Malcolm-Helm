@@ -70,7 +70,7 @@ spec:
            )
            "baseVolumeMounts" (list
              (dict "mountPath" "/var/local/ca-trust/configmap" "name" "var-local-catrust-volume")
-             (dict "mountPath" "/zeek/extract_files" "name" "zeek-live-zeek-volume" "subPath" "extract_files")
+             (dict "mountPath" "/zeek/extract_files" "name" "zeek-live-extract-files-volume" "subPath" "extract_files")
              (dict "mountPath" "/zeek/live" "name" "zeek-live-logs-volume" "subPath" "live")
              (dict "mountPath" "/usr/local/zeek/share/zeek/site/intel-preseed/configmap" "name" "zeek-live-intel-preseed-volume")
              (dict "mountPath" "/usr/local/zeek/share/zeek/site/intel" "name" "zeek-intel-volume" "subPath" "zeek/intel")
@@ -84,19 +84,20 @@ spec:
            "root" $
            "name" "zeek-live-dirinit-container"
            "env" (list
-             (dict "name" "PUSER_MKDIR" "value" "/zeek-live-logs:live/logs;/data/config:zeek/intel/Mandiant,zeek/intel/MISP,zeek/intel/STIX;/data/zeek-logs:current,extract_files/filescan,live,processed,upload")
+             (dict "name" "PUSER_CHOWN" "value" "/zeek")
+             (dict "name" "PUSER_MKDIR" "value" "/config:zeek/intel/Mandiant,zeek/intel/MISP,zeek/intel/STIX;/zeek:current,extract_files/filescan,live/logs,processed,upload;/zeek-files:extract_files/filescan")
            )
            "volumeMounts" (list
-             (dict "name" "zeek-intel-volume" "mountPath" "/data/config")
-             (dict "name" "zeek-live-logs-volume" "mountPath" "/zeek-live-logs")
-             (dict "name" "zeek-live-zeek-volume" "mountPath" "/data/zeek-shared")
+             (dict "name" "zeek-intel-volume" "mountPath" "/config")
+             (dict "name" "zeek-live-logs-volume" "mountPath" "/zeek")
+             (dict "name" "zeek-live-extract-files-volume" "mountPath" "/zeek-files")
            )
          ) | nindent 6 }}
       volumes:
         - name: var-local-catrust-volume
           configMap:
             name: {{ .Values.ca_trust_configmap_name | default "var-local-catrust" }}
-        - name: zeek-live-zeek-volume
+        - name: zeek-live-extract-files-volume
           persistentVolumeClaim:
             claimName: zeek-claim
         - name: zeek-live-intel-preseed-volume
@@ -107,7 +108,7 @@ spec:
             claimName: config-claim
         - name: zeek-live-logs-volume
           hostPath:
-            path: "{{ .Values.zeek_live.zeek_log_path }}"
+            path: "{{ .Values.zeek_live.hostpath.logs }}"
             type: DirectoryOrCreate
         {{- if ne (len .Values.zeek_chart_overrides.live_volumes) 0 }}
         {{- toYaml .Values.zeek_chart_overrides.live_volumes | nindent 8 }}
@@ -157,7 +158,7 @@ spec:
            )
            "baseVolumeMounts" (list
              (dict "mountPath" "/var/local/ca-trust/configmap" "name" "var-local-catrust-volume")
-             (dict "mountPath" "/zeek/extract_files" "name" "zeek-live-zeek-volume" "subPath" "extract_files")
+             (dict "mountPath" "/zeek/extract_files" "name" "zeek-live-extract-files-volume" "subPath" "extract_files")
              (dict "mountPath" "/zeek/live" "name" "zeek-live-logs-volume" "subPath" "live")
              (dict "mountPath" "/usr/local/zeek/share/zeek/site/intel-preseed/configmap" "name" "zeek-live-intel-preseed-volume")
              (dict "mountPath" "/usr/local/zeek/share/zeek/site/intel" "name" "zeek-intel-volume" "subPath" "zeek/intel")
@@ -169,7 +170,7 @@ spec:
       {{ include "malcolm.filescan.container" (dict
            "root" $
            "redisSecretName" "redis-remotesensor-env"
-           "zeekVolumeName" "zeek-live-zeek-volume"
+           "zeekVolumeName" "zeek-live-extract-files-volume"
            "logsVolumeName" "filescan-live-logs-volume"
            "extraEnv" (list
              (dict "name" "FILESCAN_HTTP_SERVER_ENABLE" "value" "false")
@@ -222,9 +223,9 @@ spec:
            "volumeMounts" (list
              (dict "mountPath" "/var/local/ca-trust/configmap" "name" "var-local-catrust-volume")
              (dict "mountPath" "/var/local/curlrc/secretmap" "name" "filebeat-opensearch-curlrc-secret-volume")
-             (dict "mountPath" "/suricata" "name" "filebeat-suricata-live-volume")
+             (dict "mountPath" "/suricata" "name" "suricata-live-logs-volume")
              (dict "mountPath" "/zeek" "name" "zeek-live-logs-volume")
-             (dict "name" "filescan-live-logs-volume" "mountPath" "/filescan" "subPath" "filescan")
+             (dict "mountPath" "/filescan" "name" "filescan-live-logs-volume" "subPath" "filescan")
            )
          ) | nindent 6 }}
       initContainers:
@@ -235,13 +236,15 @@ spec:
            "root" $
            "name" "zeek-remotesensor-dirinit-container"
            "env" (list
-             (dict "name" "PUSER_CHOWN" "value" "/data/zeek-shared")
-             (dict "name" "PUSER_MKDIR" "value" "/zeek-live-logs:current,live/logs;/data/config:zeek/intel/Mandiant,zeek/intel/MISP,zeek/intel/STIX;/data/zeek-logs:current,extract_files/filescan,live,processed,upload;/data/zeek-shared:filescan;/redis:data")
+             (dict "name" "PUSER_CHOWN" "value" "/config;/filescan;/redis;/suricata-live-logs;/zeek-live-logs;/zeek-files")
+             (dict "name" "PUSER_MKDIR" "value" "/suricata-live-logs:live;/config:zeek/intel/Mandiant,zeek/intel/MISP,zeek/intel/STIX;/zeek-live-logs:current,live/logs,extract_files/filescan,processed,upload;/zeek-files:extract_files/filescan;/filescan:filescan;/redis:data")
            )
            "volumeMounts" (list
-             (dict "name" "zeek-intel-volume" "mountPath" "/data/config")
+             (dict "name" "filescan-live-logs-volume" "mountPath" "/filescan")
+             (dict "name" "zeek-intel-volume" "mountPath" "/config")
              (dict "name" "zeek-live-logs-volume" "mountPath" "/zeek-live-logs")
-             (dict "name" "zeek-live-zeek-volume" "mountPath" "/data/zeek-shared")
+             (dict "name" "suricata-live-logs-volume" "mountPath" "/suricata-live-logs")
+             (dict "name" "zeek-live-extract-files-volume" "mountPath" "/zeek-files")
              (dict "name" "redis-remotesensor-volume" "mountPath" "/redis")
            )
          ) | nindent 6 }}
@@ -249,34 +252,34 @@ spec:
         - name: var-local-catrust-volume
           configMap:
             name: {{ .Values.ca_trust_configmap_name | default "var-local-catrust" }}
-        - name: zeek-live-zeek-volume
+        - name: zeek-live-extract-files-volume
           hostPath:
-            path: "{{ .Values.zeek_live.zeek_extracted_path }}"
+            path: "{{ .Values.zeek_live.hostpath.extracted }}"
             type: DirectoryOrCreate
         - name: redis-remotesensor-volume
           hostPath:
-            path: "{{ .Values.zeek_live.redis_persistence_path }}"
+            path: "{{ .Values.redis_env.hostpath }}"
             type: DirectoryOrCreate
         - name: zeek-live-intel-preseed-volume
           configMap:
             name: zeek-intel-preseed
         - name: zeek-intel-volume
           emptyDir:
-            sizeLimit: 1Gi
+            sizeLimit: 4Gi
         - name: zeek-live-logs-volume
           hostPath:
-            path: "{{ .Values.zeek_live.zeek_log_path }}"
+            path: "{{ .Values.zeek_live.hostpath.logs }}"
             type: DirectoryOrCreate
-        - name: filebeat-suricata-live-volume
+        - name: suricata-live-logs-volume
           hostPath:
-            path: "{{ .Values.suricata_live.suricata_log_path }}"
+            path: "{{ .Values.suricata_live.hostpath }}"
             type: DirectoryOrCreate
         - name: filebeat-opensearch-curlrc-secret-volume
           secret:
             secretName: opensearch-curlrc
         - name: filescan-live-logs-volume
           hostPath:
-            path: "{{ .Values.zeek_live.filescan_log_path }}"
+            path: "{{ .Values.filescan_env.hostpath }}"
             type: DirectoryOrCreate
         - name: strelka-frontend-live-config-volume
           configMap:

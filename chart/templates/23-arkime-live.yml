@@ -67,11 +67,12 @@ spec:
            "root" $
            "name" "arkime-live-dirinit-container"
            "env" (list
-             (dict "name" "PUSER_MKDIR" "value" "/data/pcap:arkime-live;/opt/arkime:wiseini")
+             (dict "name" "PUSER_CHOWN" "value" "/pcap")
+             (dict "name" "PUSER_MKDIR" "value" "/pcap:arkime-live;/opt/arkime:wiseini")
              (dict "name" "PUSER_COPY" "value" "/opt/arkime/etc/wise.ini.example:/opt/arkime/wiseini/wise.ini")
            )
            "volumeMounts" (list
-             (dict "name" "arkime-live-pcap-volume" "mountPath" "/data/pcap")
+             (dict "name" "arkime-live-pcap-volume" "mountPath" "/pcap")
              (dict "name" "arkime-live-config-volume" "mountPath" "/opt/arkime/wiseini")
              (dict "name" "wise-config" "mountPath" "/opt/arkime/etc/wise.ini.example" "subPath" "wise.ini")
            )
@@ -94,7 +95,7 @@ spec:
             sizeLimit: 50Mi
         - name: arkime-live-pcap-volume
           hostPath:
-            path: "{{ .Values.arkime_live.pcap_hostpath }}"
+            path: "{{ .Values.arkime_live.hostpath }}"
             type: DirectoryOrCreate
 {{- if and .Values.external_elasticsearch.enabled .Values.external_elasticsearch.elastic_cert_name }}
         - name: elastic-cert
