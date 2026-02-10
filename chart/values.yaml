@@ -560,6 +560,7 @@ zeek_offline:
 
 filescan_env:
   disable: false
+  verbosity: ""
   extracted_file_http_server_enable: true
   extracted_file_http_server_recursive: true
   extracted_file_http_server_magic: false

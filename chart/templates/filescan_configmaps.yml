@@ -27,7 +27,7 @@ data:
   # Whether or not to use libmagic to show MIME types for Zeek-extracted files served
   FILESCAN_HTTP_SERVER_MAGIC: "{{ .Values.filescan_env.extracted_file_http_server_magic }}"
   FILESCAN_HTTP_SERVER_RECURSIVE: "{{ .Values.filescan_env.extracted_file_http_server_recursive }}"
-  FILESCAN_VERBOSITY: ""
+  FILESCAN_VERBOSITY: {{ .Values.filescan_env.verbosity }}
   # Determines the behavior for preservation of Zeek-extracted files
   FILESCAN_PRESERVATION: {{ .Values.filescan_env.extracted_file_preservation }}
   FILESCAN_OUTPUT_PATH: "/filescan/data/logs/filescan-%(ts)s.txt"
