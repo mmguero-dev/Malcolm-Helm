@@ -102,7 +102,7 @@ spec:
            "name" "pcap-processor-dirinit-container"
            "env" (list
              (dict "name" "PUSER_CHOWN" "value" "/pcap;/suricata;/zeek;/config")
-             (dict "name" "PUSER_MKDIR" "value" "/pcap:processed,upload;/config:zeek/intel/Mandiant,zeek/intel/MISP,zeek/intel/STIX;/suricata:live,/zeek:current,live,processed,upload;/extract_files:filescan")
+             (dict "name" "PUSER_MKDIR" "value" "/pcap:processed,upload;/config:zeek/intel/Mandiant,zeek/intel/MISP,zeek/intel/STIX;/suricata:live;/zeek:current,live,processed,upload;/extract_files:filescan")
            )
            "volumeMounts" (list
              (dict "name" "pcap-volume" "mountPath" "/pcap")
