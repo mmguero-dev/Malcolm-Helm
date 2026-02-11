@@ -167,7 +167,7 @@ Vagrant.configure("2") do |config|
 
     YQ_VERSION="4.52.2"
     YQ_URL="https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_${LINUX_CPU}"
-    curl -fsSL -o /usr/bin/yq "${YQ_URL}"
+    curl -fsSL -o /usr/local/bin/yq "${YQ_URL}"
     chmod 755 /usr/local/bin/yq
     chown root:root /usr/local/bin/yq
 
