@@ -173,8 +173,8 @@ spec:
            "zeekVolumeName" "zeek-live-extract-files-volume"
            "logsVolumeName" "filescan-live-logs-volume"
            "extraEnv" (list
-             (dict "name" "FILESCAN_HTTP_SERVER_ENABLE" "value" "false")
-             (dict "name" "FILESCAN_PRESERVATION" "value" "none")
+             (dict "name" "FILESCAN_HTTP_SERVER_ENABLE" "value" .Values.filescan_env.extracted_file_http_server_enable.remote)
+             (dict "name" "FILESCAN_PRESERVATION" "value" .Values.filescan_env.extracted_file_preservation.remote)
            )
          ) | nindent 6 }}
       {{ include "malcolm.strelkaFrontend.container" (dict

@@ -561,12 +561,16 @@ filescan_env:
   disable: false
   verbosity: ""
   hostpath: /var/lib/malcolm/filescan-logs
-  extracted_file_http_server_enable: true
+  extracted_file_http_server_enable:
+    local: "true"
+    remote: "false"
   extracted_file_http_server_recursive: true
   extracted_file_http_server_magic: false
   extracted_file_http_server_zip: false
   extracted_file_http_server_encrypt_password: ""
-  extracted_file_preservation: quarantined
+  extracted_file_preservation:
+    local: "quarantined"
+    remote: "none"
   development:
     # Prune ./zeek-logs/extract_files/ when it exceeds this size
     extracted_file_prune_threshold_max_size: 1TB
