@@ -760,23 +760,41 @@ filebeat:
   # will be pruned from the filesystem
   zip_cleanup_minutes: "90"
 
-  # Default affinity ensures the Filebeat DaemonSet runs on nodes also running Suricata or Zeek live capture. However,
-  # for zeek-remote-capture nodes, the Filebeat container is part of zeek-live-daemonset-remotesensor, hence DoesNotExist here.
+  # Default affinity ensures the Filebeat DaemonSet runs on nodes also running Suricata
+  # or Zeek live capture. However, for zeek-remote-capture nodes, the Filebeat container
+  # is part of zeek-live-daemonset-remotesensor, hence the check on cnaps.io/zeek-remote-capture.
   daemonsetNodeAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
-      - matchExpressions:
-        - key: cnaps.io/suricata-capture
-          operator: In
-          values: ["true"]
-        - key: cnaps.io/zeek-remote-capture
-          operator: DoesNotExist
-      - matchExpressions:
-        - key: cnaps.io/zeek-capture
-          operator: In
-          values: ["true"]
-        - key: cnaps.io/zeek-remote-capture
-          operator: DoesNotExist
+        # suricata-capture=true AND (zeek-remote-capture missing OR != "true")
+        - matchExpressions:
+            - key: cnaps.io/suricata-capture
+              operator: In
+              values: ["true"]
+            - key: cnaps.io/zeek-remote-capture
+              operator: DoesNotExist
+        - matchExpressions:
+            - key: cnaps.io/suricata-capture
+              operator: In
+              values: ["true"]
+            - key: cnaps.io/zeek-remote-capture
+              operator: NotIn
+              values: ["true"]
+
+        # zeek-capture=true AND (zeek-remote-capture missing OR != "true")
+        - matchExpressions:
+            - key: cnaps.io/zeek-capture
+              operator: In
+              values: ["true"]
+            - key: cnaps.io/zeek-remote-capture
+              operator: DoesNotExist
+        - matchExpressions:
+            - key: cnaps.io/zeek-capture
+              operator: In
+              values: ["true"]
+            - key: cnaps.io/zeek-remote-capture
+              operator: NotIn
+              values: ["true"]
 
 # Sets the GID and UID for unprivileged processes in all containers
 process_env:
