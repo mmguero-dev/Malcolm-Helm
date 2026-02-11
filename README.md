@@ -427,8 +427,6 @@ TEST SUITE: None
 
 The Malcolm-Helm pods should all be `Running` after a few minutes:
 
-**TODO**: update this list
-
 ```bash
 $ kubectl get pods -n malcolm
 NAME                                           READY   STATUS    RESTARTS AGE
