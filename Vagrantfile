@@ -90,7 +90,7 @@ Vagrant.configure("2") do |config|
     set -euo pipefail
 
     apt-get update -y
-    apt-get install -y build-essential git iptables linux-headers-$(uname -m | sed 's/^x86_64$/amd64/') qemu-guest-agent apache2-utils openssl
+    apt-get install -y build-essential git iptables linux-headers-$(uname -m | sed 's/^x86_64$/amd64/') qemu-guest-agent apache2-utils openssl jq
 
     ALL_DISKS=($(lsblk --nodeps --noheadings --output NAME --paths))
     for DISK in "${ALL_DISKS[@]}"; do
@@ -163,8 +163,15 @@ Vagrant.configure("2") do |config|
     fi
     kubectl apply -f /tmp/sc.yaml
 
-    STERN_VERSION=1.33.1
     LINUX_CPU=$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')
+
+    YQ_VERSION="4.52.2"
+    YQ_URL="https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_${LINUX_CPU}"
+    curl -fsSL -o /usr/bin/yq "${YQ_URL}"
+    chmod 755 /usr/local/bin/yq
+    chown root:root /usr/local/bin/yq
+
+    STERN_VERSION=1.33.1
     STERN_URL="https://github.com/stern/stern/releases/download/v${STERN_VERSION}/stern_${STERN_VERSION}_linux_${LINUX_CPU}.tar.gz"
     cd /tmp
     mkdir -p ./stern
@@ -175,7 +182,6 @@ Vagrant.configure("2") do |config|
     rm -rf /tmp/stern*
 
     K9S_VERSION=0.50.18
-    LINUX_CPU=$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')
     K9S_URL="https://github.com/derailed/K9S/releases/download/v${K9S_VERSION}/k9s_Linux_${LINUX_CPU}.tar.gz"
     cd /tmp
     mkdir -p ./K9S
@@ -186,7 +192,6 @@ Vagrant.configure("2") do |config|
     rm -rf /tmp/K9S*
 
     KUBECONFORM_VERSION=0.7.0
-    LINUX_CPU=$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')
     KUBECONFORM_URL="https://github.com/yannh/kubeconform/releases/download/v${KUBECONFORM_VERSION}/kubeconform-linux-${LINUX_CPU}.tar.gz"
     cd /tmp
     mkdir -p ./KUBECONFORM
