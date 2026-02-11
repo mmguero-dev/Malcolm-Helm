@@ -215,6 +215,7 @@ spec:
            "root" $
            "redisSecretName" "redis-remotesensor-env"
            "env" (list
+             (dict "name" "MALCOLM_PROFILE" "value" "hedgehog")
              (dict "name" "PCAP_NODE_NAME" "valueFrom" (dict "fieldRef" (dict "fieldPath" "spec.nodeName")))
              (dict "name" "FILEBEAT_ZEEK_LOG_LIVE_PATH" "value" "/zeek/live")
              (dict "name" "FILEBEAT_SURICATA_LOG_PATH" "value" "/suricata")

@@ -337,7 +337,6 @@ data:
   PGID: "{{ .Values.process_env.pgid }}"
   PUID: "{{ .Values.process_env.puid }}"
   TINI_VERBOSITY: "1"
-  MALCOLM_CONTAINER_RUNTIME: docker
 kind: ConfigMap
 metadata:
   name: process-env
